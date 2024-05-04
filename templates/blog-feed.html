@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div id="blog-feed">
+    {% block blog_post %}
+        {% include 'blog-post.html'%}
+    {% endblock %}
+</div>
+{% endblock main %}

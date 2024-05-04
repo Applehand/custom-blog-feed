@@ -3,28 +3,26 @@
 <head>
     {% block head %}
         {% include 'head.html' %}
-    {% endblock %}
+    {% endblock head %}
 </head>
 <body>
+    <nav>
+        {% block nav %}
+            {% include 'nav.html' %}
+        {% endblock nav %}
+    </nav>
     <header>
         {% block header %}
-            <nav>
-                {% block nav %}
-                    {% include 'nav.html' %}
-                {% endblock %}
-            </nav>
             {% include 'header.html' %}
-        {% endblock %}
+        {% endblock header %}
     </header>
-    <div id="body">
-        {% block body %}
-            {% include 'body.html' %}
-        {% endblock %}
-    </div>
+    <main>
+        {% block main %}{% endblock main %}
+    </main>
     <footer>
         {% block footer %}
             {% include 'footer.html' %}
-        {% endblock %}
+        {% endblock footer %}
     </footer>
 </body>
 </html>
