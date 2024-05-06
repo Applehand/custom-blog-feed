@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 
 {% block main %}
-<div id="blog-feed">
-    {% block blog_post %}
-        {% include 'blog-post.html'%}
-    {% endblock %}
-</div>
+    {% for post in posts %}
+        <div>
+            <h2><a href="/blog/{{ post.id }}">{{ post.title }}</a></h2>
+            <p>{{ post.description }}</p>
+            <img src="{{ post.image_path }}">
+            <p>{{ post.author }}</p>
+            <p>{{ post.date }}</p>
+        </div>
+    {% endfor %}
 {% endblock main %}

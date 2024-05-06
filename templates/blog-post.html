@@ -1,7 +1,14 @@
+{% extends 'base.html'%}
+
+{% block main %}
 <div>
-    <h2>Title of Post</h2>
-    <p>Description of post.</p>
+    <h1>{{ post.title }}</h1>
+    <p>Posted: {{ post.date }}</p>
     <img src="{{ url_for('static', filename='images/applehands.png') }}" class="image" />
-    <p>Author of post.</p>
-    <p>Date posted.</p>
+    <div id="post-content">
+        {{ post.content }}
+    </div>
+    <p>Author: {{ post.author }}</p>
+
 </div>
+{% endblock main %}

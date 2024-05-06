@@ -1,5 +1,10 @@
+{# 
+{% for text, href in links.items() %}
+    <li><a href="{{ href }}">{{ text }}</a></li>
+{% endfor %}
+#}
 <ul>
-    {% for text, href in links.items() %}
-        <li><a href="{{ href }}">{{ text }}</a></li>
-    {% endfor %}
+    <li><a href="/">Home</a></li>
+    <li><a href="/blog">Blog</a></li>
+    <li><a href="/wtf">Wtf?</a></li>
 </ul>
