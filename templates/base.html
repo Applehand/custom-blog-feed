@@ -1,28 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    {% block head %}
-        {% include 'head.html' %}
-    {% endblock head %}
-</head>
-<body>
-    <nav>
-        {% block nav %}
-            {% include 'nav.html' %}
-        {% endblock nav %}
-    </nav>
-    <header>
-        {% block header %}
-            {% include 'header.html' %}
-        {% endblock header %}
-    </header>
-    <main>
-        {% block main %}{% endblock main %}
-    </main>
-    <footer>
-        {% block footer %}
-            {% include 'footer.html' %}
-        {% endblock footer %}
-    </footer>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"
+    ></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog: A Feed | To Blog for Blogging</title>
+  </head>
+  <body>
+    <div class="flex">
+      <a class="button" href="/">Form</a>
+      <a class="button" href="/blog-feed">Feed</a>
+    </div>
+    <div x-data="formModel()">
+      {% block body %}
+      <form action="http://127.0.0.1:5000/create-blog" method="post">
+        <fieldset class="flex two center">
+          <label><input id="title" type="text" placeholder="Title!" /></label>
+          <label
+            ><input id="desc" type="text" placeholder="Description!"
+          /></label>
+          <textarea
+            class="full"
+            name="content"
+            placeholder="Content!"
+          ></textarea>
+          <canvas
+            width="800"
+            height="400"
+            @dragover.prevent.stop="isHighlighted = true"
+            @drop.prevent="imageDrop($event)"
+            @dragleave="isHighlighted = false"
+            x-ref="canvas"
+            :class="isHighlighted ? 'highlight' : ''"
+          ></canvas>
+          <input class="full" type="submit" value="Create Blog" />
+        </fieldset>
+      </form>
+      {% endblock %}
+    </div>
+    <script>
+      function formModel() {
+        return {
+          blogImage: null,
+          isHighlighted: false,
+          imageDrop(e) {
+            this.isHighlighted = false;
+            if (e.dataTransfer.items) {
+              [...e.dataTransfer.items].forEach((item) => {
+                if (item.type.includes("image")) {
+                  const file = item.getAsFile();
+                  const canv = this.$refs.canvas;
+                  const ctx = canv.getContext("2d");
+                  const img = new Image();
+                  blogImage = img
+                  img.onload = () => {
+                    ctx.clearRect(0, 0, canv.width, canv.height);
+                    const imgRatio = img.width / img.height;
+                    const canRatio = canv.width / canv.height;
+                    let width, height, offsetX, offsetY;
+
+                    if (imgRatio > canRatio) {
+                      width = canv.width;
+                      height = width / imgRatio;
+                      offsetX = 0;
+                      offsetY = (canv.height - height) / 2;
+                    } else {
+                      height = canv.height;
+                      width = height * imgRatio;
+                      offsetX = (canv.width - width) / 2;
+                      offsetY = 0;
+                    }
+
+                    ctx.drawImage(img, offsetX, offsetY, width, height);
+                  };
+                  img.src = URL.createObjectURL(file);
+                }
+              });
+            }
+          },
+        };
+      }
+    </script>
+  </body>
 </html>

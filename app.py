@@ -1,38 +1,47 @@
-from flask import Flask, render_template
-import os
-import json
+from flask import Flask, render_template, request
+import datetime
 
 app = Flask(__name__)
-# links = {'Home':"/", 'Blog':"/blog", 'Wtf?':"/wtf"}
 
 @app.route("/")
 def main():
-    return render_template('blog-form.html')
+    return render_template('base.html')
 
-@app.route("/blog")
-def blog():
-    posts = get_blog_posts()
-    return render_template('blog-feed.html', posts=posts)
+@app.route("/blog-feed")
+def blog_feed():
+    blogs = get_all_blogs()
+    return render_template("blog-feed.html", blogs=blogs)
 
-@app.route("/wtf")
-def wtf():
-    return render_template('wtf.html')
+@app.route("/view-blog/{blog_id}")
+def view_blog(blog_id):
+    blog = get_blog(blog_id)
+    return render_template("blog.html", blog=blog)
 
-@app.route("/blog/<int:blog_id>")
-def blog_post(blog_id):
-    posts = get_blog_posts()
-    for post in posts:
-        id = int(post['id'])
-        if id == blog_id:
-            return render_template(f'blog-post.html', post=post)
-    return "Blog ain't here, man."
+@app.route("/create-blog", methods = ['POST'])
+def create_blog():
+    blog_id = gen_id()
+    ts = datetime.datetime.now()
+    title = request.form["title"]
+    desc = request.form["desc"]
+    content = request.form["content"]
+    blog = create_blog_as_json(blog_id, ts, title, desc, content)
+    
+    return render_template(f"blog.html", blog=blog)
 
-def get_blog_posts():
-    posts = []
-    posts_directory = os.path.join(app.root_path, 'posts')
-    for filename in os.listdir(posts_directory):
-        if filename.endswith('.json'):
-            with open(os.path.join(posts_directory, filename), 'r') as file:
-                post_data = json.load(file)
-                posts.append(post_data)
-    return posts
+def create_blog_as_json(blog_id, ts, title, desc, content):
+    pass
+
+def gen_id():
+    id = len(get_all_blogs())
+    return id
+
+def get_blog(id):
+    blogs = get_all_blogs()
+    for blog in blogs:
+        if blog.id == id:
+            return blog
+    return None
+
+def get_all_blogs():
+    blogs = ""
+    return blogs
