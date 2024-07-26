@@ -17,6 +17,10 @@ textarea.full {
   margin: 0.75rem;
 }
 
+textarea {
+  resize: none;
+}
+
 canvas {
   border: thick double #32a1ce;}
 
