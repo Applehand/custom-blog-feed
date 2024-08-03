@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+
 {% block body %}
-    <p>This be a post.</p>
+<div id="blog">
+    <h1>{{ blog.title }}</h1>
+    <img src="{{ url_for('static', filename=blog.image_path) }}" />
+    <p>{{ blog.content }}</p>
+</div>
 {% endblock %}

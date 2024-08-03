@@ -1,4 +1,18 @@
 {% extends "base.html" %}
+
 {% block body %}
-    <p>This be the feed.</p>
+<div class="flex two-600 center" id="blog-feed">
+  {% for blog in blogs %}
+  <article>
+    <h1>
+      <a href="{{ url_for('view_blog', blog_id=blog.id) }}">{{ blog.title }}</a>
+    </h1>
+    <p><em>{{ blog.date }}</em></p>
+    <div>
+      <img src="{{ url_for('static', filename=blog.image_path) }}" />
+    </div>
+    <h4>{{ blog.description }}</h4>
+  </article>
+  {% endfor %}
+</div>
 {% endblock %}

@@ -16,7 +16,10 @@ def main():
 @app.route("/blog-feed")
 def blog_feed():
     blogs = get_all_blogs()
-    return render_template("blog-feed.html", blogs=blogs)
+    if blogs:
+        return render_template("blog-feed.html", blogs=blogs)
+    else:
+        return "Go back and post a blog first, silly!"
 
 @app.route("/view-blog/<blog_id>")
 def view_blog(blog_id):
@@ -53,10 +56,11 @@ def save_image(image, blog_id):
     mime_type = image.content_type
     file_ext = mime_type.split('/')[1]
     filename = f"{blog_id}.{file_ext}"
-    image_path = os.path.join(IMAGES_DIR, filename)
-    image.save(image_path)
+    image_path = os.path.join('images', filename)
+    image.save(os.path.join(IMAGES_DIR, filename))
 
     return image_path
+
 
 def save_blog(blog):
     with open(BLOGS_FILE, 'r') as f:

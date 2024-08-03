@@ -19,8 +19,8 @@
       <a class="button" href="/">Form</a>
       <a class="button" href="/blog-feed">Feed</a>
     </div>
-    <div x-data="formModel()">
-      {% block body %}
+    {% block body %}
+    <div x-data="formModel()" x-init="initCanvas()">
       <form
         action="http://127.0.0.1:5000/create-blog"
         method="post"
@@ -28,16 +28,23 @@
       >
         <fieldset class="flex two center">
           <label
-            ><input id="title" type="text" placeholder="Title!" name="title"
+            ><input
+              required
+              id="title"
+              type="text"
+              placeholder="Title!"
+              name="title"
           /></label>
           <label
             ><input
+              required
               id="desc"
               type="text"
               placeholder="Description!"
               name="desc"
           /></label>
           <textarea
+            required
             class="full"
             name="content"
             placeholder="Content!"
@@ -52,6 +59,7 @@
             :class="isHighlighted ? 'highlight' : ''"
           ></canvas>
           <input
+            required
             type="file"
             name="image"
             accept="image/*"
@@ -61,12 +69,23 @@
           <input class="full" type="submit" value="Create Blog" />
         </fieldset>
       </form>
-      {% endblock %}
     </div>
+    {% endblock %}
     <script>
       function formModel() {
         return {
           isHighlighted: false,
+          initCanvas() {
+            const canvas = this.$refs.canvas;
+            const ctx = canvas.getContext("2d");
+            ctx.textAlign = "center";
+            ctx.font = "3rem Arial";
+            ctx.fillText(
+              "Drag an image here!",
+              canvas.width / 2,
+              canvas.height / 2
+            );
+          },
           imageDrop(e) {
             this.isHighlighted = false;
             if (e.dataTransfer.items) {
@@ -75,7 +94,6 @@
                   const file = item.getAsFile();
                   const canv = this.$refs.canvas;
                   const canvRatio = canv.width / canv.height;
-
                   const ctx = canv.getContext("2d");
                   const img = new Image();
                   img.onload = () => {
